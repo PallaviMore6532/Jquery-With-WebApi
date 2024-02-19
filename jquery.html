@@ -1,0 +1,120 @@
+<html>
+<head>
+    <title>Curd using jquery Ajax And Webapi</title>
+     <script type="text/javascript" src="jquery-3.7.1.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            function GetAll() {
+                alert("say hello");
+                $.ajax(
+                    {
+                        url:"http://localhost:5046/api/Course",
+                        type:"get",
+                        contentType:"application/json",
+                        success: function (result)
+                        {
+                            alert(JSON.stringify(result));
+                            var str = "";
+                            for (var i = 0; i < result.length; i++) {
+                                str = "<tr><td>" + result[i].courseID + "</td>";
+                                str += "<td>" + result[i].courseName + "</td>";
+                                str += "<td>" + result[i].subjectName + "</td>";
+                                str += "<td>" + result[i].courseFees + "</td>";
+                                str += "<td>" + result[i].discountAmount + "</td>";
+                                str += "<td>" + result[i].finalAmount + "</td></tr>";
+                                $("#tb").append(str);
+
+                            }
+
+                        },
+                            error:function(err)
+                            {
+                                alert(JSON.stringify(err));
+                            }
+
+
+                    });
+            }
+            GetAll();
+
+$("#btnsave").click(function(){
+
+              var Cou={
+                         "CourseName":$("#cn").val(),
+                         "SubjectName":$("#sa").val(),
+                         "CourseFees":$("#cf").val(),
+                         "DiscountAmount":$("#da").val(),
+                         "FinalAmount":$("#cf").val()-$("#da").val() 
+                        };
+                 alert(JSON.stringify(Cou));
+                $.ajax({
+                  url:"http://localhost:5046/api/Course",
+                  type:"Post",
+                  contentType:"application/json",
+                  data:JSON.stringify(Cou),
+                  success:function(result)
+                  {
+                     alert(result);
+                     clear();
+                      GetAll();
+                  },
+                  error:function(err)
+                  {
+                      alert(JSON.stringify(err));
+                  }
+                  });
+
+});
+
+        });
+</script>
+</head>
+<body>
+<table>
+<thead>
+<tr>
+    <th>Course Name</th><hr>
+    <th>Subject Name</th>
+    <th>Course Fees</th>
+    <th>discount Amount</th>
+  
+   
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><input type="text" id="cn"/></td>
+<td><select id="sa">
+ <option>Programming</option>
+ <option>Database</option>
+ <option>front end</option>
+<option>Backend</option>
+</select></td>
+<td><input type="text" id="cf"/></td>
+<td><input type="text" id="da"/></td>
+<td><input type="button" value="Add To Table" id="btnsave"></td>
+
+
+</tr>
+
+</tbody>
+</table>
+
+    <h2>List Of Course</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>CourseID</th>
+                <th>CourseName</th>
+                <th>SubjectName</th>
+                <th>CourseFees</th>
+                <th>DiscountAmount</th>
+                <th>FinalAmount</th>
+            </tr>
+        </thead>
+        <tbody id="tb">
+        </tbody>
+    </table>
+
+</body>
+</html>
